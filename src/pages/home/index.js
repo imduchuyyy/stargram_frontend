@@ -17,12 +17,12 @@ function home(props) {
         data = <Loading></Loading>
     } else {
         data = getAllUser.map(user => {
-                return <p className="username">{user.username}</p>
+                return <p key= {user._id} className="username">{user.username}</p>
         })
     }
     return (
         <Layout >
-            <Layout style={{ padding: 5 }}>
+            <Layout style={{ padding: 5, marginTop: 30 }}>
                 <Content>
                     <ModelPost></ModelPost>
                     <Post></Post>

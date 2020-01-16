@@ -6,7 +6,6 @@ import { client } from './configs/apollo'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
 function App() {
-
   return (
       <ApolloProvider client={client}>
         <Root></Root>

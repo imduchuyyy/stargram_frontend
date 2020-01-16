@@ -1,14 +1,29 @@
 import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
+import { useMutation } from '@apollo/react-hooks'
 import './index.css'
 import { compose } from 'recompose'
 import { Drawer, Form, Button, Col, Row, Input, notification } from 'antd';
 
 
 function ModalNewAccount(props) {
+
+    const CREATE_USER = gql`
+    mutation($userInput: CreateUserInput!){
+        createUser(input: $userInput){
+          _id
+          username
+          password
+          role
+          idPosts
+        }
+      } 
+    `
+
     const [visible, setVisible] = useState(false)
     let username, password, confirm
+    const [createUser] = useMutation(CREATE_USER)
     function onClose() {
         setVisible(false)
     }
@@ -24,6 +39,32 @@ function ModalNewAccount(props) {
                 placement: 'bottomRight',
             });
             return
+        } else {
+            const userInput = {
+                username, 
+                password
+            }
+            createUser({
+                variables: {
+                    userInput
+                }
+            }).then(res => {
+                if (res.data.createUser) {
+                    notification['success']({
+                        message: 'Create user success',
+                        description:
+                            'Please login',
+                        placement: 'bottomRight',
+                    });
+                }
+            }).catch(err => {
+                console.log(err)
+                notification['error']({
+                    message: 'Create user fail',
+                    description: err[0],
+                    placement: 'bottomRight',
+                });
+            })
         }
         setVisible(false)
     }
@@ -38,7 +79,6 @@ function ModalNewAccount(props) {
                 onClose={onClose}
                 visible={visible}
                 bodyStyle={{ paddingBottom: 80 }}
-            // placement='top'
             >
                 <Form layout="vertical" hideRequiredMark>
                     <Row gutter={16}>
@@ -89,36 +129,4 @@ function ModalNewAccount(props) {
 
 }
 
-const GET_ALL_USER = gql`
-    query{
-        getAllUser{
-        _id
-        username
-        password
-        role
-        }
-  }
-`
-
-const USER_LOGIN = gql`
-mutation($username: String!, $password: String!){
-    login(username: $username, password: $password){
-      token
-    }
-}`
-
-export default compose(
-    graphql(USER_LOGIN, {
-        name: 'loginUser',
-        options: props => ({
-            variables: {
-                username: props.username,
-                password: props.password
-            }
-        })
-    }),
-    graphql(GET_ALL_USER, {
-        name: 'getAllUser'
-    })
-
-)(ModalNewAccount)
+export default (ModalNewAccount)

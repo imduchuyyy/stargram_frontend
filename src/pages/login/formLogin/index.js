@@ -12,7 +12,6 @@ class FormLogin extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 const { data } = this.props.getAllUser
-                console.log(data)
                 this.props.loginUser({
                     variables: {
                         username: values.username,
@@ -109,6 +108,7 @@ mutation($username: String!, $password: String!){
     }
 }`
 
+
 export default compose(
     graphql(USER_LOGIN, {
         name: 'loginUser',
@@ -121,6 +121,5 @@ export default compose(
     }),
     graphql(GET_ALL_USER, {
         name: 'getAllUser'
-    })
-
+    }),
 )(FormLogin)

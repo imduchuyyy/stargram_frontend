@@ -1,0 +1,25 @@
+.login-form {
+    margin: 10px;
+    text-align: center;
+    position: relative;
+    align-content: center;
+    top: 140px;
+    left: 35%;
+    width: 30%;
+}
+.login-form-button{
+    width: 100%;
+}
+.header{
+    font-family: 'Segoe UI';
+    font-size: 400%;
+    text-align: center;
+    position: relative;
+    top: 23vh;
+    font-weight: 30;
+    font-style: italic;
+}
+.login-form-register{
+    font-size: 100%;
+
+}

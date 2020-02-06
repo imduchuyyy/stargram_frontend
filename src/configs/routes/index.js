@@ -35,4 +35,10 @@ export const routes = [
     exact: true,
     component: 'setting'
   },
+  {
+    label: 'login',
+    path: '/',
+    exact: true,
+    component: 'login'
+  },
 ]

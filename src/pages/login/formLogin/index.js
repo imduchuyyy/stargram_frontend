@@ -12,10 +12,13 @@ class FormLogin extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 const { data } = this.props.getAllUser
+                const input= {
+                    email: values.email,
+                    password: values.password
+                }
                 this.props.loginUser({
                     variables: {
-                        username: values.username,
-                        password: values.password
+                        input
                     }
                 }).then(res => {
                     if (res.data.login) {
@@ -45,11 +48,11 @@ class FormLogin extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div>
-                <h1 className="header">Login</h1>
+                <h1 className="header">Stargram</h1>
                 <Form onSubmit={this.handleSubmit} className="login-form">
                     <Form.Item>
-                        {getFieldDecorator('username', {
-                            rules: [{ required: true, message: 'Please input your username!' }],
+                        {getFieldDecorator('email', {
+                            rules: [{ required: true, message: 'Please input your email!' }],
                         })(
                             <Input
                                 prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -102,9 +105,10 @@ const GET_ALL_USER = gql`
 `
 
 const USER_LOGIN = gql`
-mutation($username: String!, $password: String!){
-    login(username: $username, password: $password){
+mutation($input: LoginRequest!){
+    login(input: $input){
       token
+      id
     }
 }`
 
@@ -114,8 +118,7 @@ export default compose(
         name: 'loginUser',
         options: props => ({
             variables: {
-                username: props.username,
-                password: props.password
+                input: props.input
             }
         })
     }),

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 import { compose } from 'recompose';
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import Loading from './../../../Components/loading'
 import { Form, Row, Col, Input, Button, Icon, Modal, Card, Meta, Avatar, Comment, Tooltip } from 'antd';
 import ModelPost from './../modelPost'
@@ -20,6 +20,22 @@ function Post(props) {
         }
     }
     `
+    const LIKE_POST = gql`
+    mutation($idPost: String!){
+        likePost(idPost: $idPost){
+            like
+        }
+    }
+    `
+
+    const DISLIKE_POST = gql`
+    mutation($idPost: String!){
+        disLikePost(idPost: $idPost){
+            dislike
+        }
+    }
+    `
+
     const GET_USER_BY_ID = gql`
     query($id: [String]!){
         getUserById(id: $id){
@@ -31,6 +47,8 @@ function Post(props) {
 
     const [action, setAction] = useState(null)
     const { loading, error, data } = useQuery(GET_ALL_POST)
+    const [likePost] = useMutation(LIKE_POST)
+    const [dislikePost] = useMutation(DISLIKE_POST)
     let user = []
     let idUser = []
     let post = []
@@ -47,7 +65,7 @@ function Post(props) {
     if (!userByPost.loading && !userByPost.error && !loading && !error) {
         user = userByPost.data.getUserById
         for (let index = 0; index < data.getAllPost.length; index++) {
-            data.getAllPost[index].username = userByPost.data.getUserById[index].username          
+            data.getAllPost[index].username = userByPost.data.getUserById[index].username
         }
     }
     if (loading || error) {
@@ -62,7 +80,7 @@ function Post(props) {
                             <Icon
                                 type="like"
                                 theme={action === 'liked' ? 'filled' : 'outlined'}
-                                onClick={like}
+                                onClick={() => { like(data.getAllPost[index]._id) }}
                             />
                         </Tooltip>
                         <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data.getAllPost[index].like}</span>
@@ -72,7 +90,7 @@ function Post(props) {
                             <Icon
                                 type="dislike"
                                 theme={action === 'disliked' ? 'filled' : 'outlined'}
-                                onClick={dislike}
+                                onClick={() => { dislike(data.getAllPost[index]._id) }}
                             />
                         </Tooltip>
                         <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data.getAllPost[index].dislike}</span>
@@ -95,12 +113,36 @@ function Post(props) {
         }
     }
 
-    function like() {
+    function like(idPost) {
         setAction('like')
+        likePost({
+            variables: {
+                idPost
+            },
+            refetchQueries: () => [
+                {
+                    query: GET_ALL_POST
+                }
+            ]
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
-    function dislike() {
+    function dislike(idPost) {
         setAction('dislike')
+        dislikePost({
+            variables: {
+                idPost
+            },
+            refetchQueries: () => [
+                {
+                    query: GET_ALL_POST
+                }
+            ]
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     return (

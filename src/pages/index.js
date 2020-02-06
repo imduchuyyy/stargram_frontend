@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react'
+    import React, { Suspense, useState } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { routes } from '../configs/routes'
 import login from './login'
@@ -22,12 +22,12 @@ function root() {
                                         const MyComponent = React.lazy(() =>
                                             import(`./${route.component}`)
                                         )
-                                        return isAuth ? (
+                                        return (isAuth && route.label !== 'login') ? (
                                             <LayoutDesign >
                                                 <MyComponent {...props1} {...route} />
                                             </LayoutDesign>
                                         ) : (
-                                                <Route to='/login' component={login}></Route>
+                                                <Route to='/' component={login}></Route>
                                             )
                                     }}
                                 />

@@ -2,6 +2,10 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "npm": "6.9.0",
+    "node": "10.16.0"
+  },
   "dependencies": {
     "@ant-design/pro-layout": "^4.10.8",
     "@apollo/react-hooks": "^3.1.3",

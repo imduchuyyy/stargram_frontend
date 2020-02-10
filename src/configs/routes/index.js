@@ -41,4 +41,10 @@ export const routes = [
     exact: true,
     component: 'login'
   },
+  {
+    label: 'register',
+    path: '/register',
+    exact: true,
+    component: 'register'
+  },
 ]

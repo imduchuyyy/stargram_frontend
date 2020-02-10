@@ -2,7 +2,6 @@ import React from 'react'
 import { Popconfirm, notification, Menu, Icon } from 'antd'
 
 function Logout(props) {
-    console.log(props)
     function openNotification() {
         notification['success']({
             message: 'Logout success',

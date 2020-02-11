@@ -5,90 +5,56 @@ import { Form, Row, Col, Input, Button, Icon, Modal, Card, Avatar, Comment, Tool
 import ModelPost from './../modelPost'
 import './index.css'
 
-function Post(props) {
-    const { Meta } = Card;
-    const GET_ALL_POST = gql`
-    query {
-        getAllPost {
-            _id
-            description
-            thumbnails
-            likes {
-                _id
-                email
-                username
-                role
-            }
-            creator {
-                _id
-                email
-                username
-                role
-            }
-            comments {
-                _id
-                creator {
-                    _id
-                    username
-                    email
-                    role
-                }
-                commentAt
-                description
-            }
-            createAt
-        }
+const { Meta } = Card;
+const LIKE_POST = gql`
+mutation($idPost: String!){
+    likePost(idPost: $idPost){
+        like
     }
-    `
-    const LIKE_POST = gql`
-    mutation($idPost: String!){
-        likePost(idPost: $idPost){
-            like
-        }
-    }
-    `
+}
+`
 
-    const DISLIKE_POST = gql`
-    mutation($idPost: String!){
-        disLikePost(idPost: $idPost){
-            dislike
-        }
+const DISLIKE_POST = gql`
+mutation($idPost: String!){
+    disLikePost(idPost: $idPost){
+        dislike
     }
-    `
+}
+`
+
+function Post(props) {
+
 
     let post = []
 
     const [action, setAction] = useState(null)
-    const { data, loading, error } = useQuery(GET_ALL_POST)
+    const { data } = props
     const [likePost] = useMutation(LIKE_POST)
     const [dislikePost] = useMutation(DISLIKE_POST)
 
-    if (loading || error) {
-        post = <Card style={{ width: '100%', marginTop: 16 }} loading={true}></Card>
-    } else {
-        for (let index = 0; index < data.getAllPost.length; index++) {
-            post.push(<Card
-                className="post"
-                key={data.getAllPost[index]._id}
-                style={{ width: "100%" }}
-                // cover={
-                //     <img
-                //         alt="example"
-                //         src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                //     />
-                // }
-                actions={[
-                    <Icon type="like" key="like" />,
-                    <Icon type="edit" key="edit" />,
-                    <Icon type="ellipsis" key="ellipsis" />,
-                ]}
-            >
-                <Meta
-                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                    title={data.getAllPost[index].creator.username}
-                    description={data.getAllPost[index].description}
+    for (let index = 0; index < data.length; index++) {
+        post.push(<Card
+            className="post"
+            key={data[index]._id}
+            style={{ width: "100%" }}
+            cover={
+                <img
+                    alt="example"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                 />
-                {/* <Comment
+            }
+            actions={[
+                <Icon type="like" key="like" />,
+                <Icon type="edit" key="edit" />,
+                <Icon type="ellipsis" key="ellipsis" />,
+            ]}
+        >
+            <Meta
+                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                title={data[index].creator.username}
+                description={data[index].description}
+            />
+            {/* <Comment
                     actions={[
                         <span key="comment-basic-like">
                             <Tooltip title="Like">
@@ -125,47 +91,47 @@ function Post(props) {
                         </p>
                     }
                 /> */}
-            </Card>)
-        }
+        </Card>)
     }
 
-    function like(idPost) {
-        setAction('like')
-        likePost({
-            variables: {
-                idPost
-            },
-            refetchQueries: () => [
-                {
-                    query: GET_ALL_POST
-                }
-            ]
-        }).catch(err => {
-            console.log(err)
-        })
-    }
 
-    function dislike(idPost) {
-        setAction('dislike')
-        dislikePost({
-            variables: {
-                idPost
-            },
-            refetchQueries: () => [
-                {
-                    query: GET_ALL_POST
-                }
-            ]
-        }).catch(err => {
-            console.log(err)
-        })
-    }
+function like(idPost) {
+    setAction('like')
+    likePost({
+        variables: {
+            idPost
+        },
+        refetchQueries: () => [
+            {
+                query: GET_ALL_POST
+            }
+        ]
+    }).catch(err => {
+        console.log(err)
+    })
+}
 
-    return (
-        <div>
-            {post}
-        </div>
-    )
+function dislike(idPost) {
+    setAction('dislike')
+    dislikePost({
+        variables: {
+            idPost
+        },
+        refetchQueries: () => [
+            {
+                query: GET_ALL_POST
+            }
+        ]
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+return (
+    <div>
+        {post}
+    </div>
+)
 }
 
 export default (Post)

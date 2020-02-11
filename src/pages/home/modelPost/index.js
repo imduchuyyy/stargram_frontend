@@ -7,17 +7,9 @@ import Loading from './../../../Components/loading'
 import { Form, Row, Col, Input, Button, Icon, Modal, notification } from 'antd';
 import { useHistory, useLocation } from "react-router-dom";
 
-function ModelPost(props) {
-    const POST_NEW = gql`
+const POST_NEW = gql`
     mutation($input: AddPostInput!){
         createPost(input: $input){
-          _id
-        }
-      }
-    `
-    const GET_ALL_POST = gql`
-    query{
-        getAllPost{
             description
             thumbnails
             likes{
@@ -45,13 +37,14 @@ function ModelPost(props) {
             }
             createAt
         }
-    }
+        }
     `
-    const location = useLocation()
-    const history = useHistory()
+
+let description
+
+function ModelPost(props) {
     const [isShown, setShow] = useState(false)
     const [createPost] = useMutation(POST_NEW)
-    let description
 
     async function postNew() {
         if (description) {
@@ -61,12 +54,7 @@ function ModelPost(props) {
                         description: description,
                         thumbnails: []
                     }
-                },
-                refetchQueries: () => [
-                    {
-                        query: GET_ALL_POST
-                    }
-                ]
+                }
             }).then(res => {
                 if (res.data.createPost) {
                     notification['success']({
@@ -76,7 +64,7 @@ function ModelPost(props) {
                         placement: 'bottomRight',
                     });
                 }
-                props.setNew(true)
+                props.setData(props.data.push(res.data.createPost))   
                 setShow(false)
             }).catch(err => {
                 notification['error']({
@@ -89,8 +77,6 @@ function ModelPost(props) {
                 setShow(false)
             })
         }
-        // history.push(location.pathname)
-        // props.rerenderParentCallback()
     }
 
 

@@ -38,7 +38,7 @@ function FormLogin(props) {
                                 '',
                             placement: 'bottomRight',
                         });
-                        window.localStorage.setItem('token', res.data.login.token)
+                        window.localStorage.setItem('token', `Bearer ${res.data.login.token}`)
                     }
                 }).catch(err => {
                     setLoading(false)
@@ -53,7 +53,7 @@ function FormLogin(props) {
                 notification['error']({
                     message: 'Login fail',
                     description:
-                        `Please input your ${err.toString()}`,
+                        'Please input your email and password',
                     placement: 'bottomRight',
                 });
             }
@@ -69,7 +69,7 @@ function FormLogin(props) {
                     })(
                         <Input
                             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                            placeholder="Username"
+                            placeholder="Email"
                         />,
                     )}
                 </Form.Item>

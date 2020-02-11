@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, Component, useEffect } from 'react'
 import { Layout } from 'antd';
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
@@ -9,40 +9,20 @@ import Post from './post'
 import ModelPost from './modelPost'
 
 function home(props) {
-    const dataUser = props.getAllUser
     const { Header, Sider, Content } = Layout;
-    const { loading, error, getAllUser } = dataUser
-    let data
-    if (loading || error) {
-        data = <Loading></Loading>
-    } else {
-        data = getAllUser.map(user => {
-                return <p key= {user._id} className="username">{user.username}</p>
-        })
-    }
+
+    const [newpost, setNew] = useState(false)
+    console.log(newpost)
+    
     return (
         <Layout >
             <Layout style={{ padding: 5, marginTop: 30 }}>
                 <Content>
-                    <ModelPost></ModelPost>
+                    <ModelPost setNew={setNew}></ModelPost>
                     <Post></Post>
                 </Content>
             </Layout>
         </Layout>
     )
 }
-const GET_ALL_USER = gql`
-query{
-    getAllUser{
-    _id
-    username
-    password
-    role
-    }
-}
-`
-export default compose(
-    graphql(GET_ALL_USER, {
-        name: 'getAllUser'
-    })
-)(home)
+export default (home)

@@ -5,64 +5,62 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import { compose } from 'recompose';
 import Loading from './../../../Components/loading'
 import { Form, Row, Col, Input, Button, Icon, Modal, notification } from 'antd';
+import { useHistory, useLocation } from "react-router-dom";
 
 function ModelPost(props) {
-    const GET_USER_BY_POST = gql`
-    query($id: String!){
-    getUserByPost(idPost: $id){
-        username
-        password
-        role
-        idPosts
-    }
-    }
-    `
     const POST_NEW = gql`
-    mutation($idCreator: String! ,$postInput: String!){
-        createPost(idCreator: $idCreator, post: $postInput){
+    mutation($input: AddPostInput!){
+        createPost(input: $input){
           _id
         }
       }
     `
-    const GET_CURRENT_USER = gql`
-    query($token: String!){
-        me(token: $token){
-            username
-            _id
-        }
-    }
-    `
     const GET_ALL_POST = gql`
     query{
         getAllPost{
+            description
+            thumbnails
+            likes{
             _id
-            title
-            des
-            idCreator
-            like
-            dislike
+            email
+            username
+            role
+            }
+            creator{
+            _id
+            email
+            username
+            role
+            }
+            comments{
+                _id
+                creator{
+                    _id
+                    username
+                    email
+                    role
+                }
+                commentAt
+                description
+            }
+            createAt
         }
     }
     `
-
+    const location = useLocation()
+    const history = useHistory()
     const [isShown, setShow] = useState(false)
-    const token = localStorage.getItem('token')
-    const { loading, error, data } = useQuery(GET_CURRENT_USER, {
-        variables: {
-            token
-        }
-    })
-    const [addPost] = useMutation(POST_NEW)
-    let postDes
-    if (!loading && !error) {
-        // console.log(data.me)
-    }
-    function postNew() {
-        if (postDes) {
-            addPost({
+    const [createPost] = useMutation(POST_NEW)
+    let description
+
+    async function postNew() {
+        if (description) {
+            await createPost({
                 variables: {
-                    idCreator: data.me._id,
-                    postInput: postDes
+                    input: {
+                        description: description,
+                        thumbnails: []
+                    }
                 },
                 refetchQueries: () => [
                     {
@@ -70,7 +68,7 @@ function ModelPost(props) {
                     }
                 ]
             }).then(res => {
-                if (res.data) {
+                if (res.data.createPost) {
                     notification['success']({
                         message: 'Post success',
                         description:
@@ -78,6 +76,7 @@ function ModelPost(props) {
                         placement: 'bottomRight',
                     });
                 }
+                props.setNew(true)
                 setShow(false)
             }).catch(err => {
                 notification['error']({
@@ -90,7 +89,11 @@ function ModelPost(props) {
                 setShow(false)
             })
         }
+        // history.push(location.pathname)
+        // props.rerenderParentCallback()
     }
+
+
 
     return <div>
         <Modal
@@ -104,13 +107,13 @@ function ModelPost(props) {
                 <Row gutter={16}>
                     <Col span={24}>
                         <Form.Item label="Post description  :">
-                            <Input onChange={(e) => postDes = e.target.value} ></Input>
+                            <Input onChange={(e) => description = e.target.value} ></Input>
                         </Form.Item>
                     </Col>
                 </Row>
             </Form>
         </Modal>
-        <Button height={30}  icon="edit" onClick={() => setShow(true)}>
+        <Button height={30} icon="edit" onClick={() => setShow(true)}>
             Post new
             </Button>
     </div>

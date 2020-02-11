@@ -76,6 +76,8 @@ function LayoutDesign(props) {
                         <span className="nav-text">Friend</span>
                     </Menu.Item>
                 </Menu>
+                {/* <Footer style={{ textAlign: 'center' }}>BuiDucHuy ©2020 </Footer> */}
+
             </Sider>
             <Layout>
                 <Header style={{ background: '#fff', padding: 0 }}>
@@ -106,7 +108,6 @@ function LayoutDesign(props) {
                 <Content style={{ margin: '24px 16px 0' }}>
                     <div style={{ padding: 24, background: '#fff', minHeight: "100%" }}>{props.children}</div>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>BuiDucHuy ©2020 </Footer>
             </Layout>
         </Layout>
     )

@@ -20,7 +20,6 @@ function FormLogin(props) {
         e.preventDefault();
         props.form.validateFields((err, values) => {
             if (!err) {
-                const { data } = props.getAllUser
                 const input = {
                     email: values.email,
                     password: values.password
@@ -54,7 +53,7 @@ function FormLogin(props) {
                 notification['error']({
                     message: 'Login fail',
                     description:
-                        `Please input your${err.toString()}`,
+                        `Please input your ${err.toString()}`,
                     placement: 'bottomRight',
                 });
             }
@@ -76,7 +75,7 @@ function FormLogin(props) {
                 </Form.Item>
                 <Form.Item>
                     {getFieldDecorator('password', {
-                        rules: [{ required: true, message: 'Please input your Password!' }],
+                        rules: [{ required: true, message: 'Please input your password!' }],
                     })(
                         <Input
                             prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}

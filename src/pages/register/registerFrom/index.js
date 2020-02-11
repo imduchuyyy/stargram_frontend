@@ -2,8 +2,25 @@ import React, { useState } from 'react'
 import { Form, Icon, Input, Button, Checkbox, notification } from 'antd'
 import { Pane, Spinner, Link } from 'evergreen-ui'
 import './index.css'
+import gql from 'graphql-tag'
+import { useMutation } from 'react-apollo'
+import { useHistory } from 'react-router-dom'
 
 function registerFrom(props) {
+    const CREATE_NEW_USER = gql`
+        mutation($input: CreateUserInput!){
+            createUser(input: $input){
+                email
+                username
+                password
+            }
+        }
+
+    `
+    const [createUser, { data, loading: mutationLoading, error: mutationError }] = useMutation(CREATE_NEW_USER)
+
+    const history = useHistory()
+
     const { getFieldDecorator } = props.form;
     const formItemLayout = {
         labelCol: {
@@ -16,15 +33,56 @@ function registerFrom(props) {
         },
     };
 
-    function onFinish(value){
-        console.log(value)
+    function onHandleSubmit(e) {
+        e.preventDefault()
+        props.form.validateFields((err, values) => {
+            if (!err) {
+                const { email, username, fullname, password, confirm } = values
+                if (password !== confirm) {
+                    notification['error']({
+                        message: 'Register fail',
+                        description:
+                            'Password doesnt match',
+                        placement: 'bottomRight',
+                    });
+                    return
+                }
+                const input = {
+                    email,
+                    username,
+                    fullname,
+                    password
+                }
+                createUser({
+                    variables: {
+                        input
+                    }
+                }).then(res => {
+                    if (res.data.createUser) {
+                        history.push('/')
+                    }
+                    notification['success']({
+                        message: 'Register success',
+                        description:
+                            '',
+                        placement: 'bottomRight',
+                    });
+                }).catch(err => {
+                    const message = err.message.slice(err.message.indexOf(':') + 2, err.message.length)
+                    notification['error']({
+                        message: 'Register fail',
+                        description: message,
+                        placement: 'bottomRight',
+                    });
+                })
+            }
+        })
     }
 
     return <div>
         <h1 className="header-register">Register</h1>
         <Form className="register-form"
             {...formItemLayout}
-            onFinish={onFinish}
         >
             <Form.Item
                 name="email"
@@ -49,8 +107,8 @@ function registerFrom(props) {
                 name="username"
                 label="username"
             >
-                {getFieldDecorator('user', {
-                    rules: [{ required: true, message: 'Please input your username!' }],
+                {getFieldDecorator('username', {
+                    rules: [{ required: true, message: 'Please input your username!' }]
                 })(
                     <Input
                         placeholder="Your username"
@@ -61,7 +119,7 @@ function registerFrom(props) {
                 name="name"
                 label="Full name"
             >
-                {getFieldDecorator('name', {
+                {getFieldDecorator('fullname', {
                     rules: [{ required: true, message: 'Please input your full name!' }],
                 })(
                     <Input
@@ -84,10 +142,10 @@ function registerFrom(props) {
             </Form.Item>
             <Form.Item
                 name="confirm"
-                label="Comfirm"
+                label="Confirm"
             >
                 {getFieldDecorator('confirm', {
-                    rules: [{ required: true, message: 'Please input your password!' }],
+                    rules: [{ required: true, message: 'Please input your password again!' }],
                 })(
                     <Input
                         type="password"
@@ -97,8 +155,8 @@ function registerFrom(props) {
             </Form.Item>
             <Form.Item>
                 <br></br>
-                <Button type="primary" htmlType="submit" className="register-form-button">
-                    {false ? <Pane display="flex" alignItems="center" justifyContent="center"  >
+                <Button type="primary" htmlType="submit" className="register-form-button" onClick={onHandleSubmit}>
+                    {mutationLoading ? <Pane display="flex" alignItems="center" justifyContent="center"  >
                         <Spinner size={25} />
                     </Pane> : 'Register new account'}
                 </Button>

@@ -3,7 +3,7 @@
     text-align: center;
     position: relative;
     align-content: center;
-    top: 80px;
+    top: 10vh;
     left: 20%;
     width: 50%;
 }
@@ -12,7 +12,7 @@
     font-size: 400%;
     text-align: center;
     position: relative;
-    top: 13vh;
+    top: 10vh;
     font-weight: 30;
     font-style: italic;
 }

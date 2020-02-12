@@ -23,15 +23,15 @@ function root() {
                                         const MyComponent = React.lazy(() =>
                                             import(`./${route.component}`)
                                         )
-                                        if(route.label === 'register'){
+                                        if (route.label === 'register') {
                                             return <Route to='/register' component={register}></Route>
                                         }
                                         return (isAuth && route.label !== 'login') ? (
-                                            <LayoutDesign >
+                                            <LayoutDesign>
                                                 <MyComponent {...props1} {...route} />
                                             </LayoutDesign>
                                         ) : (
-                                                <Route to='/' component={login}></Route>
+                                                <Route component={login}></Route>
                                             )
                                     }}
                                 />
@@ -40,7 +40,6 @@ function root() {
                 </BrowserRouter>
             </Suspense>
         </UserProvider>
-
     )
 }
 export default root

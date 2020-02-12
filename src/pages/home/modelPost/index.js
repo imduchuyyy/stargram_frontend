@@ -5,81 +5,17 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import { compose } from 'recompose';
 import Loading from './../../../Components/loading'
 import { Form, Row, Col, Input, Button, Icon, Modal, notification } from 'antd';
-import { useHistory, useLocation } from "react-router-dom";
-
-const POST_NEW = gql`
-    mutation($input: AddPostInput!){
-        createPost(input: $input){
-            description
-            thumbnails
-            likes{
-            _id
-            email
-            username
-            role
-            }
-            creator{
-            _id
-            email
-            username
-            role
-            }
-            comments{
-                _id
-                creator{
-                    _id
-                    username
-                    email
-                    role
-                }
-                commentAt
-                description
-            }
-            createAt
-        }
-        }
-    `
 
 let description
 
 function ModelPost(props) {
     const [isShown, setShow] = useState(false)
-    const [createPost] = useMutation(POST_NEW)
 
-    async function postNew() {
-        if (description) {
-            await createPost({
-                variables: {
-                    input: {
-                        description: description,
-                        thumbnails: []
-                    }
-                }
-            }).then(res => {
-                if (res.data.createPost) {
-                    notification['success']({
-                        message: 'Post success',
-                        description:
-                            '',
-                        placement: 'bottomRight',
-                    });
-                }
-                props.setData(props.data.push(res.data.createPost))   
-                setShow(false)
-            }).catch(err => {
-                notification['error']({
-                    message: 'Post fail',
-                    description:
-                        '',
-                    placement: 'bottomRight',
-                });
-                console.log(err)
-                setShow(false)
-            })
-        }
+    function postNew() {
+        props.createPost({ description })
+        setShow(false)
+
     }
-
-
 
     return <div>
         <Modal

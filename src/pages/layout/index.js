@@ -1,9 +1,8 @@
-import React, { Suspense, useState } from 'react'
+import React, { useEffect } from 'react'
 import Logout from './logout'
 import { UserConsumer } from './../../configs/context'
 import { routes } from './../../configs'
 import { Layout, Menu, Icon, Breadcrumb, Input, AutoComplete, Badge, Card, Typography, Alert } from 'antd'
-// import Sider from 'antd/lib/layout/Sider'
 import './index.css'
 
 function LayoutDesign(props) {
@@ -11,6 +10,9 @@ function LayoutDesign(props) {
     const { Sider } = Layout;
     const { Search } = Input
     const { history } = props.children.props
+    const height = window.innerHeight
+    const width = window.innerWidth
+    
     let indexPage
     for (let index = 0; index < routes.length; index++) {
         if (routes[index].label == props.children.props.label) {
@@ -18,14 +20,7 @@ function LayoutDesign(props) {
             break
         }
     }
-    const [collapsed, setCollapsed] = useState(false)
 
-    const height = window.innerHeight
-    const width = window.innerWidth
-
-    function toggle() {
-        setCollapsed(!collapsed)
-    }
 
     return (
         <Layout
@@ -40,6 +35,7 @@ function LayoutDesign(props) {
                 onCollapse={(collapsed, type) => {
                     console.log(collapsed, type);
                 }}
+                width = {width > 800 ? '18%' : '50%'}
             >
                 <div className="logo"
                     style={{

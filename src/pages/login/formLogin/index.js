@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 
 function FormLogin(props) {
     const [loading, setLoading] = useState(false)
-    const { getFieldDecorator } = props.form;
+    const { getFieldDecorator } = props.form
     const history = useHistory()
 
     function register(e) {
@@ -49,7 +49,7 @@ function FormLogin(props) {
                         placement: 'bottomRight',
                     });
                 })
-            }else{
+            } else {
                 notification['error']({
                     message: 'Login fail',
                     description:

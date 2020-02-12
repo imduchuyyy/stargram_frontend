@@ -1,42 +1,22 @@
 import React, { useState } from 'react'
-import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
 import { Form, Row, Col, Input, Button, Icon, Modal, Card, Avatar, Comment, Tooltip } from 'antd';
-import ModelPost from './../modelPost'
 import './index.css'
+import Like from './like'
+import Loading from './../../../Components/loading'
 
 const { Meta } = Card;
-const LIKE_POST = gql`
-mutation($idPost: String!){
-    likePost(idPost: $idPost){
-        like
-    }
-}
-`
-
-const DISLIKE_POST = gql`
-mutation($idPost: String!){
-    disLikePost(idPost: $idPost){
-        dislike
-    }
-}
-`
 
 function Post(props) {
-
-
     let post = []
-
+    const { currentUser } = props
     const [action, setAction] = useState(null)
     const { data } = props
-    const [likePost] = useMutation(LIKE_POST)
-    const [dislikePost] = useMutation(DISLIKE_POST)
 
     for (let index = 0; index < data.length; index++) {
         post.push(<Card
             className="post"
             key={data[index]._id}
-            style={{ width: "100%" }}
+            style={{ width: "100%", float:'center' }}
             cover={
                 <img
                     alt="example"
@@ -44,94 +24,62 @@ function Post(props) {
                 />
             }
             actions={[
-                <Icon type="like" key="like" />,
-                <Icon type="edit" key="edit" />,
-                <Icon type="ellipsis" key="ellipsis" />,
+                <Like data={data} currentUser={currentUser} index={index}></Like>,
+                <p><Icon type="edit" key="edit" /> Comment</p>,
+                <p><Icon type="ellipsis" key="ellipsis" /></p>,
             ]}
         >
             <Meta
-                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                title={data[index].creator.username}
+                avatar={<Avatar src={data[index].creator.avatar} />}
+                title={<a>{data[index].creator.username}</a>}
                 description={data[index].description}
             />
-            {/* <Comment
+            {/* {data[index].comments ? <Comment
                     actions={[
                         <span key="comment-basic-like">
                             <Tooltip title="Like">
                                 <Icon
                                     type="like"
                                     theme={action === 'liked' ? 'filled' : 'outlined'}
-                                    onClick={() => { like(data.getAllPost[index]._id) }}
+                                    // onClick={() => { like(data.[index]._id) }}
                                 />
                             </Tooltip>
-                            <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data.getAllPost[index].like}</span>
+                            <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data[index].like}</span>
                         </span>,
                         <span key=' key="comment-basic-dislike"'>
                             <Tooltip title="Dislike">
                                 <Icon
                                     type="dislike"
                                     theme={action === 'disliked' ? 'filled' : 'outlined'}
-                                    onClick={() => { dislike(data.getAllPost[index]._id) }}
+                                    // onClick={() => { dislike(data.getAllPost[index]._id) }}
                                 />
                             </Tooltip>
-                            <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data.getAllPost[index].dislike}</span>
+                            <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data[index].dislike}</span>
                         </span>,
                         <span key="comment-basic-reply-to">Reply to</span>,
                     ]}
-                    author={<a>{data.getAllPost[index]}</a>}
+                    author={<a>{data[index]}</a>}
                     avatar={
                         <Avatar
                             src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                            alt={data.getAllPost[index].creator.username}
+                            alt={data[index].creator.username}
                         />
                     }
                     content={
                         <p>
-                            {data.getAllPost[index].description}
+                            {data[index].description}
                         </p>
                     }
-                /> */}
+                />: ''} */}
+
         </Card>)
     }
 
-
-function like(idPost) {
-    setAction('like')
-    likePost({
-        variables: {
-            idPost
-        },
-        refetchQueries: () => [
-            {
-                query: GET_ALL_POST
-            }
-        ]
-    }).catch(err => {
-        console.log(err)
-    })
-}
-
-function dislike(idPost) {
-    setAction('dislike')
-    dislikePost({
-        variables: {
-            idPost
-        },
-        refetchQueries: () => [
-            {
-                query: GET_ALL_POST
-            }
-        ]
-    }).catch(err => {
-        console.log(err)
-    })
-}
-
-return (
-    <div>
-        {post}
-    </div>
-)
+    return (
+        <div>
+            {post}
+        </div>
+    )
 }
 
 export default (Post)

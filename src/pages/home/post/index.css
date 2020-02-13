@@ -1,6 +1,9 @@
-.post{
-    margin-top: 10px;
-}
 .liked{
     color: #1890ff;
+}
+.posts{
+    margin: 20px 0 20px;
+}
+.post{
+    margin: 0 0 20px 0;
 }

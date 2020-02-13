@@ -1,5 +1,5 @@
 import React, { useState, Component, useEffect } from 'react'
-import { Layout } from 'antd';
+import { Layout, Skeleton } from 'antd';
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 import { compose } from 'recompose';
@@ -96,20 +96,19 @@ mutation($input: AddPostInput!){
 
 function home(props) {
     const { Content } = Layout;
-
     const { data: dataCurrentUser, loading: LoadingCurrentUser, error: ErrorCurrentUser } = useQuery(GET_CURRENT_USER)
 
     const { data, loading, error } = useQuery(GET_ALL_POST)
     const [createPost] = useMutation(POST_NEW)
 
     function handleCreatePost(prams){
-        const { description } = prams
-        if (description) {
+        const { description, urlImage } = prams
+            if (description) {
             createPost({
                 variables: {
                     input: {
                         description: description,
-                        thumbnails: []
+                        thumbnails: [urlImage]
                     }
                 },
                 refetchQueries: () =>[
@@ -151,7 +150,7 @@ function home(props) {
             </Layout>
         )
     }else{
-        return <Loading></Loading>
+        return <Skeleton></Skeleton>
     }
     
     

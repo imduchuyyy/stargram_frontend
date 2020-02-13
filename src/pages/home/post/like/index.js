@@ -4,7 +4,6 @@ import { useMutation } from '@apollo/react-hooks'
 import { Icon } from 'antd';
 import './../index.css'
 
-
 const TOGGLE_LIKE = gql`
 mutation($idPost: String!){
     toggleLikePost(idPost:$idPost)

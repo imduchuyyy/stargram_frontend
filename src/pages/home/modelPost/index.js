@@ -1,26 +1,26 @@
-import React, { useState } from 'react'
-import gql from 'graphql-tag'
-import { graphql, Query } from 'react-apollo'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-import { compose } from 'recompose';
-import Loading from './../../../Components/loading'
-import { Form, Row, Col, Input, Button, Icon, Modal, notification } from 'antd';
+import React, { useState } from 'react' 
+import { Form, Row, Col, Input, Button, Icon, Modal, notification, Upload } from 'antd';
+import UploadFunction from './../../../Components/uploadImage'
 
 let description
 
 function ModelPost(props) {
     const [isShown, setShow] = useState(false)
+    const [urlImage, setUrlImage] = useState('')
 
     function postNew() {
-        props.createPost({ description })
+        props.createPost({ description, urlImage })
         setShow(false)
+    }
 
+    function handleUploadImage(params){
+        setUrlImage(params)
     }
 
     return <div>
         <Modal
             title="What are you thinking today"
-            // style={{ marginTop: 20 }}
+            // style={{ margin: 20 }}
             visible={isShown}
             onOk={postNew}
             onCancel={() => setShow(false)}
@@ -28,8 +28,11 @@ function ModelPost(props) {
             <Form layout="vertical" hideRequiredMark>
                 <Row gutter={16}>
                     <Col span={24}>
-                        <Form.Item label="Post description  :">
+                        <Form.Item  label="Post description  :">
                             <Input onChange={(e) => description = e.target.value} ></Input>
+                            <div className="uploadImage">
+                                <UploadFunction  uploadImage={handleUploadImage}></UploadFunction>
+                            </div>
                         </Form.Item>
                     </Col>
                 </Row>
@@ -40,6 +43,5 @@ function ModelPost(props) {
             </Button>
     </div>
 }
-
 
 export default (ModelPost)

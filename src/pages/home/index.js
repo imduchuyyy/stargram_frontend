@@ -150,7 +150,7 @@ function home(props) {
             </Layout>
         )
     }else{
-        return <Skeleton></Skeleton>
+        return <Loading></Loading>
     }
     
     

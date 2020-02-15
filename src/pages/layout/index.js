@@ -21,7 +21,6 @@ function LayoutDesign(props) {
         }
     }
 
-
     return (
         <Layout
             style={{ height: `${height}px` }}

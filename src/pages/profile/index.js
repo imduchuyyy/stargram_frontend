@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 import Loading from './../../Components/loading'
 import { PageHeader, Tabs, Button, Statistic, Descriptions, Avatar } from 'antd'
 import { useQuery, useMutation } from '@apollo/react-hooks'
+import EditProfile from './editProfile'
 
 const GET_CURRENT_USER = gql`
 query{
@@ -39,17 +40,17 @@ function profile(props) {
                 <Descriptions.Item label="Email">
                     <a>{dataUser.me.email}</a>
                 </Descriptions.Item>
-        <Descriptions.Item label="Birth Day">{`${birthDay.getDay()} - ${birthDay.getMonth()} - ${birthDay.getFullYear()}`}</Descriptions.Item>
+                <Descriptions.Item label="Birth Day">{`${birthDay.getDay()} - ${birthDay.getMonth()} - ${birthDay.getFullYear()}`}</Descriptions.Item>
                 <Descriptions.Item label="Effective Time">infinity</Descriptions.Item>
                 <Descriptions.Item label="Description">
                     {dataUser.me.description}
-              </Descriptions.Item>
+                </Descriptions.Item>
             </Descriptions>
         );
     }
 
 
-    function extraContent(dataUser){
+    function extraContent(dataUser) {
         return (
             <div
                 style={{
@@ -68,7 +69,7 @@ function profile(props) {
                 <Statistic title="Active Time" prefix="" value="1 day" />
             </div>
         )
-    } 
+    }
 
     function Content({ children, extra }) {
         return (
@@ -79,8 +80,6 @@ function profile(props) {
         );
     };
 
-
-    console.log(data)
     if (loading || error) {
         return <Loading></Loading>
     } else {
@@ -94,9 +93,7 @@ function profile(props) {
                     // title={<Avatar size={80} src={data.me.avatar}></Avatar>}
                     avatar={{ src: data.me.avatar, size: 60 }}
                     title={<p className="username">{data.me.username}</p>}
-                    extra={[
-                        <Button key="3">Edit Profile</Button>,
-                    ]}
+                    extra={<EditProfile dataUser={data.me}></EditProfile>}
                 // footer={
                 //     <Tabs tabPosition="top" defaultActiveKey="1">
                 //         <TabPane tab="Details" key="1" />

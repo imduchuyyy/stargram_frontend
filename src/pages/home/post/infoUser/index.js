@@ -19,7 +19,7 @@ const DescriptionItem = ({ title, content }) => (
                 color: 'rgba(0,0,0,0.85)',
             }}
         >
-            {title}
+            {title}:
       </p>
         {content}
     </div>
@@ -47,15 +47,15 @@ function InfoUser(props) {
         >
             <Row gutter={16}>
                 <Col span={12}>
-                    <DescriptionItem title="Username: " content={creator.username} />
+                    <DescriptionItem title="Username" content={creator.username} />
                 </Col>
                 <Col span={12}>
-                    <DescriptionItem title="Sex: " content={creator.sex} />
+                    <DescriptionItem title="Sex" content={creator.sex} />
                 </Col>
             </Row>
             <Row gutter={16}>
                 <Col span={24}>
-                    <DescriptionItem title="Description: " content={creator.description} />
+                    <DescriptionItem title="Description" content={creator.description} />
                 </Col>
             </Row>
 

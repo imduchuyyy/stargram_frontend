@@ -1,9 +1,10 @@
 import React, { useState, Component, useEffect } from 'react'
 import gql from 'graphql-tag'
 import Loading from './../../Components/loading'
-import { PageHeader, Tabs, Button, Statistic, Descriptions, Avatar } from 'antd'
+import { PageHeader, Tabs, Button, Statistic, Descriptions, Avatar, notification } from 'antd'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import EditProfile from './editProfile'
+import moment from 'moment'
 
 const GET_CURRENT_USER = gql`
 query{
@@ -19,19 +20,27 @@ query{
     description
     createAt
     dob
+    sex
   }
 }
 `
 
-const { TabPane } = Tabs;
+const EDIT_USER = gql`
+    mutation($input: EditUserInput){
+        updateUser(input: $input){
+            _id 
+        }
+    }
+`
 
 
 function profile(props) {
 
-    const { data, loading, error } = useQuery(GET_CURRENT_USER)
+    const { data, loading, error } = useQuery(GET_CURRENT_USER, { fetchPolicy: 'network-only' })
+    const [updateUser] = useMutation(EDIT_USER)
 
     function renderContent(column, dataUser) {
-        let birthDay = new Date(parseInt(dataUser.me.dob))
+        // let birthDay = new Date(parseInt(dataUser.me.dob))
 
         console.log(dataUser)
         return (
@@ -40,13 +49,50 @@ function profile(props) {
                 <Descriptions.Item label="Email">
                     <a>{dataUser.me.email}</a>
                 </Descriptions.Item>
-                <Descriptions.Item label="Birth Day">{`${birthDay.getDay()} - ${birthDay.getMonth()} - ${birthDay.getFullYear()}`}</Descriptions.Item>
-                <Descriptions.Item label="Effective Time">infinity</Descriptions.Item>
+                <Descriptions.Item label="Birth Day">{moment(new Date(parseInt(dataUser.me.dob))).format("MMM Do YYYY")}</Descriptions.Item>
+                <Descriptions.Item label="Sex">{dataUser.me.sex}</Descriptions.Item>
                 <Descriptions.Item label="Description">
                     {dataUser.me.description}
                 </Descriptions.Item>
             </Descriptions>
         );
+    }
+
+    function editUser(fullname, username, email, sex, dob, description) {
+        const input = {
+            fullname,
+            username,
+            email,
+            sex,
+            dob: dob ? dob.toString() : null,
+            description
+        }
+        updateUser({
+            variables: {
+                input: input
+            },
+            refetchQueries: () => [
+                {
+                    query: GET_CURRENT_USER
+                }
+            ]
+        }).then(res => {
+            if (res.data.updateUser) {
+                notification['success']({
+                    message: 'Update success',
+                    description:
+                        '',
+                    placement: 'bottomRight',
+                });
+            }
+        }).catch(err => {
+            const message = err.message.slice(err.message.indexOf(':') + 2, err.message.length)
+            notification['error']({
+                message: 'Update fail',
+                description: message,
+                placement: 'bottomRight',
+            });
+        })
     }
 
 
@@ -93,7 +139,7 @@ function profile(props) {
                     // title={<Avatar size={80} src={data.me.avatar}></Avatar>}
                     avatar={{ src: data.me.avatar, size: 60 }}
                     title={<p className="username">{data.me.username}</p>}
-                    extra={<EditProfile dataUser={data.me}></EditProfile>}
+                    extra={<EditProfile editUser={editUser} dataUser={data.me}></EditProfile>}
                 // footer={
                 //     <Tabs tabPosition="top" defaultActiveKey="1">
                 //         <TabPane tab="Details" key="1" />
@@ -107,7 +153,5 @@ function profile(props) {
             </div>
         )
     }
-
-
 }
 export default profile

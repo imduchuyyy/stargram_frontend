@@ -69,7 +69,7 @@ function FormLogin(props) {
                     })(
                         <Input
                             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                            placeholder="Email"
+                            placeholder="Email Address"
                         />,
                     )}
                 </Form.Item>

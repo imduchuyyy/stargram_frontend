@@ -3,14 +3,14 @@ import { Form, Row, Col, Input, Button, Icon, Modal, Card, Avatar, Comment, Tool
 import './index.css'
 import Like from './like'
 import Loading from './../../../Components/loading'
+import InforUser from './infoUser'
 
 const { Meta } = Card;
 
 function Post(props) {
     let post = []
-    const { currentUser } = props
+    const { currentUser, data } = props
     const [action, setAction] = useState(null)
-    const { data } = props
 
     data.sort((a, b) => {
         return b.createAt - a.createAt
@@ -38,7 +38,7 @@ function Post(props) {
             >
                 <Meta
                     avatar={<Avatar src={data[index].creator.avatar} />}
-                    title={<a>{data[index].creator.username}</a>}
+                    title={<InforUser currentUser={currentUser} creator={data[index].creator}></InforUser>}
                     description={data[index].description}
                 />
                 {/* {data[index].comments ? <Comment

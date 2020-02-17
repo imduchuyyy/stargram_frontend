@@ -1,7 +1,7 @@
 import React, { useState, Component, useEffect } from 'react'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { Drawer, Form, Button, Col, Row, Input, Select, DatePicker, Icon } from 'antd';
+import { Drawer, Form, Button, Col, Row, Input, Select, DatePicker, Icon, notification } from 'antd';
 
 const width = window.innerWidth
 
@@ -19,6 +19,12 @@ function ChangePassword(props) {
 
     function onChangePassword() {
         console.log(currentPassword, newPassword, confirmPassword)
+        notification['error']({
+            message: 'Updating ...',
+            description:'Updating ...',
+            placement: 'bottomRight',
+        });
+        closeChildrenDrawer()
     }
 
     return <Form.Item label="Change Password">

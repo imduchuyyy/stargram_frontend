@@ -2,8 +2,8 @@ import React, { useState, Component, useEffect } from 'react'
 import gql from 'graphql-tag'
 import Loading from './../../../Components/loading'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { Drawer, Form, Button, Col, Row, Input, Select, DatePicker, Icon } from 'antd';
-import moment from 'moment';
+import { Drawer, Form, Button, Col, Row, Input, Select, DatePicker, Icon, notification } from 'antd';
+import moment, { months } from 'moment';
 import ChangePassword from './changePassword'
 
 const { Option } = Select
@@ -11,13 +11,13 @@ const width = window.innerWidth
 
 function EditProfile(props) {
     const [visible, setVisivle] = useState(false)
-    const { dataUser } = props
+    const { dataUser, editUser } = props
 
     let fullname, username, email, sex, dob, description
 
     function edit() {
-        console.log(fullname, username, email, sex, dob, description)
-
+        editUser(fullname, username, email, sex, dob, description)
+        setVisivle(false)
     }
 
     function openDrawer() {
@@ -77,7 +77,7 @@ function EditProfile(props) {
                     </Col>
                     <Col span={12}>
                         <Form.Item label="Sex">
-                            <Select placeholder="Please select an owner" defaultValue={'male'} onChange={(e) => {
+                            <Select placeholder="Please select an owner" defaultValue={dataUser.sex} onChange={(e) => {
                                 sex = e
                             }}>
                                 <Option value="male">male</Option>
@@ -93,12 +93,10 @@ function EditProfile(props) {
                                 style={{ width: '100%' }}
                                 // getPopupContainer={trigger => trigger.parentNode}
                                 disabledDate={disabledDate}
+                                defaultValue={moment(new Date(parseInt(dataUser.dob)))}
                                 format='YYYY/MM/DD'
                                 onChange={(e) => {
-                                    // dob = e.target.value
-                                    console.log(e.toDate())
-                                    const date = new Date(e)
-                                    console.log(date)
+                                    if(e) dob = e.toDate().getTime()
                                 }}
                             />
                         </Form.Item>

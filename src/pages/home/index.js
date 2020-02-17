@@ -22,11 +22,16 @@ const GET_ALL_POST = gql`
                 role
             }
             creator{
-            _id
-            email
-            username
-            role
-            avatar
+                _id
+                email
+                username
+                fullname
+                avatar
+                followers
+                followings
+                role
+                description
+                sex
             }
             comments{
                 _id
@@ -56,6 +61,7 @@ query{
     followings
     role
     description
+    sex
   }
 }
 `
@@ -72,11 +78,16 @@ mutation($input: AddPostInput!){
         role
         }
         creator{
-        _id
-        email
-        username
-        role
-        avatar
+            _id
+            email
+            username
+            fullname
+            avatar
+            followers
+            followings
+            role
+            description
+            sex
         }
         comments{
             _id
@@ -96,14 +107,14 @@ mutation($input: AddPostInput!){
 
 function home(props) {
     const { Content } = Layout;
-    const { data: dataCurrentUser, loading: LoadingCurrentUser, error: ErrorCurrentUser } = useQuery(GET_CURRENT_USER)
+    const { data: dataCurrentUser, loading: LoadingCurrentUser, error: ErrorCurrentUser } = useQuery(GET_CURRENT_USER, { fetchPolicy: 'network-only' })
 
-    const { data, loading, error } = useQuery(GET_ALL_POST)
+    const { data, loading, error } = useQuery(GET_ALL_POST, { fetchPolicy: 'network-only' })
     const [createPost] = useMutation(POST_NEW)
 
-    function handleCreatePost(prams){
+    function handleCreatePost(prams) {
         const { description, urlImage } = prams
-            if (description) {
+        if (description) {
             createPost({
                 variables: {
                     input: {
@@ -111,7 +122,7 @@ function home(props) {
                         thumbnails: [urlImage]
                     }
                 },
-                refetchQueries: () =>[
+                refetchQueries: () => [
                     {
                         query: GET_ALL_POST
                     }
@@ -144,15 +155,15 @@ function home(props) {
                 <Layout style={{ padding: 5, marginTop: 30 }}>
                     <Content>
                         <ModelPost createPost={handleCreatePost}></ModelPost>
-                        <Post data={data.getAllPost} currentUser= {dataCurrentUser.me}></Post>
+                        <Post data={data.getAllPost} currentUser={dataCurrentUser.me}></Post>
                     </Content>
                 </Layout>
             </Layout>
         )
-    }else{
+    } else {
         return <Loading></Loading>
     }
-    
-    
+
+
 }
 export default (home)

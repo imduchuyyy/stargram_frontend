@@ -17,6 +17,9 @@ function registerFrom(props) {
         }
 
     `
+
+    const [disable, setDisable] = useState(true)
+
     const [createUser, { data, loading: mutationLoading, error: mutationError }] = useMutation(CREATE_NEW_USER)
 
     const history = useHistory()
@@ -145,7 +148,7 @@ function registerFrom(props) {
                 label="Confirm"
             >
                 {getFieldDecorator('confirm', {
-                    rules: [{ required: true, message: 'Please input your password again!' }],
+                    rules: [{ required: true, message: 'Please input confirm your password!' }],
                 })(
                     <Input
                         type="password"
@@ -154,13 +157,22 @@ function registerFrom(props) {
                 )}
             </Form.Item>
             <Form.Item>
-                <br></br>
-                <Button type="primary" htmlType="submit" className="register-form-button" onClick={onHandleSubmit}>
+                <Checkbox onChange={(e) => {
+                    if (e.target.checked) {
+                        setDisable(false)
+                    }else{
+                        setDisable(true)
+                    }
+                }}>Huy dep trai ?</Checkbox>
+            </Form.Item>
+            <Form.Item>
+                <Button disabled={disable} type="primary" htmlType="submit" className="register-form-button" onClick={onHandleSubmit}>
                     {mutationLoading ? <Pane display="flex" alignItems="center" justifyContent="center"  >
                         <Spinner size={25} />
                     </Pane> : 'Register new account'}
                 </Button>
             </Form.Item>
+            
         </Form>
 
     </div>

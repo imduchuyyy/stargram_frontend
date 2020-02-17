@@ -5,6 +5,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import { Drawer, Form, Button, Col, Row, Input, Select, DatePicker, Icon, notification } from 'antd';
 import moment, { months } from 'moment';
 import ChangePassword from './changePassword'
+import UploadFunction from './../../../Components/uploadImage'
 
 const { Option } = Select
 const width = window.innerWidth
@@ -13,10 +14,10 @@ function EditProfile(props) {
     const [visible, setVisivle] = useState(false)
     const { dataUser, editUser } = props
 
-    let fullname, username, email, sex, dob, description
+    let fullname, username, email, sex, dob, description, avatar
 
     function edit() {
-        editUser(fullname, username, email, sex, dob, description)
+        editUser(fullname, username, email, sex, dob, description, avatar)
         setVisivle(false)
     }
 
@@ -32,6 +33,10 @@ function EditProfile(props) {
         return current && current > moment().endOf('day');
     }
 
+    function uploadAvatar(param){
+        avatar = param
+    }
+
     return <div>
         <Button type="primary" onClick={openDrawer}>
             <Icon type="plus" /> Edit Profile
@@ -44,6 +49,13 @@ function EditProfile(props) {
             bodyStyle={{ paddingBottom: 80 }}
         >
             <Form layout="vertical" hideRequiredMark>
+                <Row gutter={16}>
+                    <Col span={24}>
+                    <Form.Item label="Change avatar">
+                            <UploadFunction uploadImage={uploadAvatar}></UploadFunction>
+                        </Form.Item>
+                    </Col>
+                </Row>
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item label="Full Name">
@@ -96,7 +108,7 @@ function EditProfile(props) {
                                 defaultValue={moment(new Date(parseInt(dataUser.dob)))}
                                 format='YYYY/MM/DD'
                                 onChange={(e) => {
-                                    if(e) dob = e.toDate().getTime()
+                                    if (e) dob = e.toDate().getTime()
                                 }}
                             />
                         </Form.Item>

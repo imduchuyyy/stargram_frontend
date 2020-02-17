@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Form, Row, Col, Input, Button, Icon, Modal, notification, Upload } from 'antd';
 import UploadFunction from './../../../Components/uploadImage'
 
-let description
+let description 
 
 function ModelPost(props) {
     const [isShown, setShow] = useState(false)

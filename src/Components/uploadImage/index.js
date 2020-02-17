@@ -59,7 +59,7 @@ function UploadFunction(props) {
     const uploadButton = (
         <div>
             <Icon type="plus" />
-            <div className="ant-upload-text">Upload</div>
+            <div className="ant-upload-text">Upload Image</div>
         </div>
     );
 

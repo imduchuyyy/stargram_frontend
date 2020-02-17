@@ -58,14 +58,15 @@ function profile(props) {
         );
     }
 
-    function editUser(fullname, username, email, sex, dob, description) {
+    function editUser(fullname, username, email, sex, dob, description, avatar) {
         const input = {
             fullname,
             username,
             email,
             sex,
             dob: dob ? dob.toString() : null,
-            description
+            description,
+            avatar
         }
         updateUser({
             variables: {

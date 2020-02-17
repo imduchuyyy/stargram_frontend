@@ -42,6 +42,7 @@ function FormLogin(props) {
                     }
                 }).catch(err => {
                     setLoading(false)
+                    console.log(err)
                     notification['error']({
                         message: 'Login fail',
                         description:

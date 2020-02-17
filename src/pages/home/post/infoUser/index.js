@@ -19,7 +19,7 @@ const DescriptionItem = ({ title, content }) => (
                 color: 'rgba(0,0,0,0.85)',
             }}
         >
-            {title}:
+            {title}
       </p>
         {content}
     </div>

@@ -35,7 +35,6 @@ const EDIT_USER = gql`
 
 
 function profile(props) {
-
     const { data, loading, error } = useQuery(GET_CURRENT_USER, { fetchPolicy: 'network-only' })
     const [updateUser] = useMutation(EDIT_USER)
 

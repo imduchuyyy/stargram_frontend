@@ -1,16 +1,28 @@
 import React, { useState } from 'react'
 import { Form, Icon, Input, Button, Checkbox, notification } from 'antd'
 import gql from 'graphql-tag'
-import { graphql } from 'react-apollo'
+import { graphql, useMutation } from 'react-apollo'
 import './index.css'
 import { compose } from 'recompose'
 import { Pane, Spinner, Link } from 'evergreen-ui'
 import { useHistory } from "react-router-dom";
 
+
+const USER_LOGIN = gql`
+mutation($input: LoginRequest!){
+    login(input: $input){
+      token
+      id
+    }
+}`
+
+
 function FormLogin(props) {
     const [loading, setLoading] = useState(false)
     const { getFieldDecorator } = props.form
     const history = useHistory()
+
+    const [ loginUser ] = useMutation(USER_LOGIN)
 
     function register(e) {
         history.push('/register')
@@ -25,7 +37,7 @@ function FormLogin(props) {
                     password: values.password
                 }
                 setLoading(true)
-                props.loginUser({
+                loginUser({
                     variables: {
                         input
                     }
@@ -111,36 +123,4 @@ function FormLogin(props) {
 
 }
 
-const GET_ALL_USER = gql`
-    query{
-        getAllUser{
-        _id
-        username
-        password
-        role
-        }
-  }
-`
-
-const USER_LOGIN = gql`
-mutation($input: LoginRequest!){
-    login(input: $input){
-      token
-      id
-    }
-}`
-
-
-export default compose(
-    graphql(USER_LOGIN, {
-        name: 'loginUser',
-        options: props => ({
-            variables: {
-                input: props.input
-            }
-        })
-    }),
-    graphql(GET_ALL_USER, {
-        name: 'getAllUser'
-    }),
-)(FormLogin)
+export default FormLogin

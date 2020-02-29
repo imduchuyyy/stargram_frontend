@@ -12,39 +12,26 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 const GET_ALL_POST = gql`
     query{
         getAllPost{
-            _id
-            description
-            thumbnails
-            likes{
+            post{
                 _id
-                email
-                username
-                role
+                description
+                likes
+                createAt
+                thumbnails
             }
             creator{
                 _id
-                email
                 username
-                fullname
                 avatar
-                followers
-                followings
-                role
                 description
                 sex
+                fullname
+                isOnline
+                followers
+                followings
+                dob
+                email
             }
-            comments{
-                _id
-                creator{
-                    _id
-                    username
-                    email
-                    role
-                }
-                commentAt
-                description
-            }
-            createAt
         }
     }
     `
@@ -69,40 +56,28 @@ query{
 const POST_NEW = gql`
 mutation($input: AddPostInput!){
     createPost(input: $input){
-        description
-        thumbnails
-        likes{
-        _id
-        email
-        username
-        role
-        }
-        creator{
-            _id
-            email
-            username
-            fullname
-            avatar
-            followers
-            followings
-            role
-            description
-            sex
-        }
-        comments{
-            _id
+        post{
+                _id
+                description
+                likes
+                createAt
+                thumbnails
+            }
             creator{
                 _id
                 username
+                avatar
+                description
+                sex
+                fullname
+                isOnline
+                followers
+                followings
+                dob
                 email
-                role
             }
-            commentAt
-            description
-        }
-        createAt
     }
-    }
+}
 `
 
 function home(props) {

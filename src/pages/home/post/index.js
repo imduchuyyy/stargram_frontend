@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Form, Row, Col, Input, Button, Icon, Modal, Card, Avatar, Comment, Tooltip, Skeleton } from 'antd';
 import './index.css'
 import Like from './like'
-import Loading from './../../../Components/loading'
 import InforUser from './infoUser'
 
 const { Meta } = Card;
@@ -13,7 +12,7 @@ function Post(props) {
     const [action, setAction] = useState(null)
 
     data.sort((a, b) => {
-        return b.createAt - a.createAt
+        return b.post.createAt - a.post.createAt
     })
 
     if (data.length === 0) {
@@ -22,12 +21,12 @@ function Post(props) {
         for (let index = 0; index < data.length; index++) {
             post.push(<Card
                 className="post"
-                key={data[index]._id}
+                key={data[index].post._id}
                 style={{ width: "100%", float: 'center' }}
                 cover={
-                    data[index].thumbnails? <img
+                    data[index].post.thumbnails? <img
                         alt="image"
-                        src={data[index].thumbnails[0]}
+                        src={data[index].post.thumbnails[0]}
                     />:null
                 }
                 actions={[
@@ -39,7 +38,7 @@ function Post(props) {
                 <Meta
                     avatar={<Avatar src={data[index].creator.avatar} />}
                     title={<InforUser currentUser={currentUser} creator={data[index].creator}></InforUser>}
-                    description={data[index].description}
+                    description={data[index].post.description}
                 />
                 {/* {data[index].comments ? <Comment
                     actions={[

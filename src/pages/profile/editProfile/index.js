@@ -106,7 +106,7 @@ function EditProfile(props) {
                                 // getPopupContainer={trigger => trigger.parentNode}
                                 disabledDate={disabledDate}
                                 defaultValue={moment(new Date(parseInt(dataUser.dob)))}
-                                format='YYYY/MM/DD'
+                                format='DD/MM/YYYY  '
                                 onChange={(e) => {
                                     if (e) dob = e.toDate().getTime()
                                 }}

@@ -16,8 +16,8 @@ function Like(props) {
     const [likePost, { loading }] = useMutation(TOGGLE_LIKE)
     let liked = false
 
-    for (var i = 0; i < data[index].likes.length; i++) {
-        if (data[index].likes[i]._id === currentUser._id) {
+    for (var i = 0; i < data[index].post.likes.length; i++) {
+        if (data[index].post.likes[i] === currentUser._id) {
             liked = true
             break
         }
@@ -26,15 +26,15 @@ function Like(props) {
     function toggleLike() {
         likePost({
             variables: {
-                idPost: data[index]._id
+                idPost: data[index].post._id
             }
         }).then(res => {
             if (res.data.toggleLikePost) {
-                data[index].likes.push(currentUser)
+                data[index].post.likes.push(currentUser._id)
                 liked = true
             } else {
-                const indexLike = data[index].likes.indexOf(currentUser)
-                data[index].likes.splice(indexLike, 1)
+                const indexLike = data[index].post.likes.indexOf(currentUser._id)
+                data[index].post.likes.splice(indexLike, 1)
                 liked = false
             }
             setState(true)
@@ -44,7 +44,7 @@ function Like(props) {
 
 
     if (!loading) {
-        return <p onClick={toggleLike} className={liked ? 'liked' : ''}><Icon type="like" key="like" /> {data[index].likes.length}</p>
+        return <p onClick={toggleLike} className={liked ? 'liked' : ''}><Icon type="like" key="like" /> {data[index].post.likes.length}</p>
     } else {
         return <Icon type="like" key="like" />
     }

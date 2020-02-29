@@ -36,12 +36,13 @@ const EDIT_USER = gql`
 
 function profile(props) {
     const { data, loading, error } = useQuery(GET_CURRENT_USER, { fetchPolicy: 'network-only' })
+
+    console.log(useQuery(GET_CURRENT_USER, { fetchPolicy: 'network-only' }))
+
     const [updateUser] = useMutation(EDIT_USER)
 
     function renderContent(column, dataUser) {
         // let birthDay = new Date(parseInt(dataUser.me.dob))
-
-        console.log(dataUser)
         return (
             <Descriptions size="small" column={column}>
                 <Descriptions.Item label="Full name">{dataUser.me.fullname}</Descriptions.Item>
